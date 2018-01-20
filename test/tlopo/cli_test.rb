@@ -10,17 +10,17 @@ require 'test_helper'
 module Tlopo
   class CliTest < Minitest::Test
     @@command_cfg = {
-        'name' => 'command',
-        'class' => 'Tlopo::Command',
-        'banner' => 'Banner goes here',
-        'switches' => [
-          {
-            'name' => 'filename',
-            'short' => '-F',
-            'long' => '--filename <filename>',
-            'desc' => 'Sets filename'
-          }
-        ]
+      'name' => 'command',
+      'class' => 'Tlopo::Command',
+      'banner' => 'Banner goes here',
+      'switches' => [
+        {
+          'name' => 'filename',
+          'short' => '-F',
+          'long' => '--filename <filename>',
+          'desc' => 'Sets filename'
+        }
+      ]
     }
 
     def test_that_it_has_a_version_number
@@ -28,28 +28,41 @@ module Tlopo
     end
 
     def test_that_it_loads_config_from_file
-      assert false
+      config_file = '/config.yaml'
+      filename = '/etc/hosts'
+      FakeFS.activate!
+
+      File.open(config_file, 'w+') { |f| f.puts(@@command_cfg.to_yaml) }
+      Tlopo::Command.opt('filename')
+      out, _err = capture_io do
+        ARGV.replace(['-F', filename])
+        Tlopo::Cli.new(config_file: config_file).run
+      end
+
+      FakeFS.deactivate!
+
+      assert_equal(filename, out.strip)
     end
 
     def test_that_it_loads_config_from_object
       filename = '/etc/hosts'
-      Tlopo::Command.opt 'filename'
-      out, err = capture_io do 
-        ARGV.replace ['-F', filename ]
-        Tlopo::Cli.new( config: @@command_cfg ).run
+      Tlopo::Command.opt('filename')
+      out, _err = capture_io do
+        ARGV.replace(['-F', filename])
+        Tlopo::Cli.new(config: @@command_cfg).run
       end
       assert_equal(filename, out.strip)
     end
   end
 
   class Command
-    def self.opt (value=nil)
+    def self.opt(value = nil)
       @@value = value unless value.nil?
-      return @@value
-    end 
+      @@value
+    end
 
     def self.run(opts)
-      puts opts[@@value]
+      puts(opts[@@value])
     end
   end
 end

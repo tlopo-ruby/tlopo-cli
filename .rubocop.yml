@@ -26,4 +26,6 @@ Lint/UnderscorePrefixedVariableName:
 Security/MarshalLoad:
   Exclude: 
     - test/**/*
-
+Style/ClassVars:
+  Exclude:
+    - test/**/*
