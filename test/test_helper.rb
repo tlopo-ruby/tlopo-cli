@@ -1,4 +1,4 @@
-$LOAD_PATH.unshift File.expand_path("../../lib", __FILE__)
-require "tlopo/cli"
+$LOAD_PATH.unshift(File.expand_path('../../lib', __FILE__))
+require 'tlopo/cli'
 
-require "minitest/autorun"
+require 'minitest/autorun'

@@ -1,11 +1,13 @@
-require "test_helper"
+require 'test_helper'
 
-class Tlopo::CliTest < Minitest::Test
-  def test_that_it_has_a_version_number
-    refute_nil ::Tlopo::Cli::VERSION
-  end
+module Tlopo
+  class CliTest < Minitest::Test
+    def test_that_it_has_a_version_number
+      refute_nil(::Tlopo::Cli::VERSION)
+    end
 
-  def test_it_does_something_useful
-    assert false
+    def test_it_does_something_useful
+      assert false
+    end
   end
 end
