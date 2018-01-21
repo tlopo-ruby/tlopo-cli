@@ -1,4 +1,9 @@
-# Tlopo::Cli
+# tlopo-cli
+[![Gem Version](https://badge.fury.io/rb/tlopo-cli.svg)](http://badge.fury.io/rb/tlopo-cli)
+[![Build Status](https://travis-ci.org/tlopo-ruby/tlopo-cli.svg?branch=master)](https://travis-ci.org/tlopo-ruby/tlopo-cli)
+[![Code Climate](https://codeclimate.com/github/tlopo-ruby/tlopo-cli/badges/gpa.svg)](https://codeclimate.com/github/tlopo-ruby/tlopo-cli)
+[![Dependency Status](https://gemnasium.com/tlopo-ruby/tlopo-cli.svg)](https://gemnasium.com/tlopo-ruby/tlopo-cli)
+[![Coverage Status](https://coveralls.io/repos/github/tlopo-ruby/tlopo-cli/badge.svg?branch=master)](https://coveralls.io/github/tlopo-ruby/tlopo-cli?branch=master)
 
 Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tlopo/cli`. To experiment with that code, run `bin/console` for an interactive prompt.
 
