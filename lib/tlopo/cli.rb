@@ -11,6 +11,8 @@ module Tlopo
       raise msg if opts[:config_file] && opts[:config]
       @cfg = YAML.safe_load(File.read(opts[:config_file])) if opts[:config_file]
       @cfg = opts[:config] if opts[:config]
+      @globals = @cfg[:globals]
+      @cfg.delete(:globals)
     end
 
     def run
@@ -60,7 +62,7 @@ module Tlopo
       opts = result[key]
       opts.delete('class')
       result.delete(key)
-      opts['_globals'] = result
+      opts['_globals'] = result if @globals
       Object.const_get(_class).run(opts)
     end
 

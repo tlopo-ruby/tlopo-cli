@@ -21,6 +21,10 @@ Style/MethodCallWithArgsParentheses:
   Enabled: true
   IgnoredMethods: [require, raise, include, attr_reader, refute, assert]
   Exclude: [Gemfile, Rakefile, kubeclient.gemspec]
+Metrics/BlockLength:
+  Enabled: true
+  Exclude: 
+    - tlopo-cli.gemspec
 Lint/UnderscorePrefixedVariableName:
   Enabled: false
 Security/MarshalLoad:
