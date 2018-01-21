@@ -110,6 +110,8 @@ cfg = {
     }
   ]
 }
+
+Tlopo::Cli.new(config: cfg).run 
 ```
 In action: 
 ```bash
