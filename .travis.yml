@@ -1,5 +1,10 @@
-sudo: false
 language: ruby
 rvm:
-  - 2.4.1
-before_install: gem install bundler -v 1.15.4
+  - "2.2"
+  - "2.3.0"
+  - "2.4.0"
+sudo: false
+cache: bundler
+script: bundle exec rake $TASK
+env:
+ - TASK=test_with_coveralls
