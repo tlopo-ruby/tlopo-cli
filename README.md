@@ -5,9 +5,7 @@
 [![Dependency Status](https://gemnasium.com/tlopo-ruby/tlopo-cli.svg)](https://gemnasium.com/tlopo-ruby/tlopo-cli)
 [![Coverage Status](https://coveralls.io/repos/github/tlopo-ruby/tlopo-cli/badge.svg?branch=master)](https://coveralls.io/github/tlopo-ruby/tlopo-cli?branch=master)
 
-Welcome to your new gem! In this directory, you'll find the files you need to be able to package up your Ruby library into a gem. Put your Ruby code in the file `lib/tlopo/cli`. To experiment with that code, run `bin/console` for an interactive prompt.
-
-TODO: Delete this and the text above, and describe your gem
+A Library to speed up CLI apps development
 
 ## Installation
 
@@ -19,30 +17,130 @@ gem 'tlopo-cli'
 
 And then execute:
 
-    $ bundle
+```Bash
+bundle
+```
 
 Or install it yourself as:
 
-    $ gem install tlopo-cli
+```Bash
+gem install tlopo-cli
+```
 
 ## Usage
 
-TODO: Write usage instructions here
+Simple usage: 
+```ruby
+require 'tlopo/cli'
 
-## Development
+class Command
+  def self.run(opts)
+    puts opts
+  end
+end
 
-After checking out the repo, run `bin/setup` to install dependencies. Then, run `rake test` to run the tests. You can also run `bin/console` for an interactive prompt that will allow you to experiment.
+cfg = {
+  'name' =>  'command',
+  'banner' => "My ClI\n    Run my-cli with ARGS\nOPTIONS:\n",
+  'class' => 'Command',
+  'switches' => [{
+    'name' => 'filename',
+    'short' => '-f',
+    'long' => '--filename <Filename>',
+    'desc' => 'Sets filename'
+  }]
+}
 
-To install this gem onto your local machine, run `bundle exec rake install`. To release a new version, update the version number in `version.rb`, and then run `bundle exec rake release`, which will create a git tag for the version, push git commits and tags, and push the `.gem` file to [rubygems.org](https://rubygems.org).
+Tlopo::Cli.new(config: cfg).run 
+```
+In action: 
+```bash
+$ ruby /tmp/my-cli.rb --help
+My ClI
+    Run my-cli with ARGS
+OPTIONS:
+    -f, --filename <Filename>        Sets filename
+$ ruby /tmp/my-cli.rb  -f /etc/hosts
+{"filename"=>"/etc/hosts"}
+```
 
+You can have as many subcommands as you want, options will be parsed.
+```ruby
+require 'tlopo/cli'
+
+class Command
+  def self.run(opts)
+    puts opts
+  end
+end
+
+class SubCommand1
+  def self.run(opts)
+    puts opts
+  end
+end
+
+class SubCommand2
+  def self.run(opts)
+    puts opts
+  end
+end
+
+cfg = {
+  :globals => true, # This will include the options for each 'parent' command
+  :usage => true, # This will add _usage in opts commands/subcommands can print it  if needed
+  'name' =>  'command',
+  'banner' => "command\nOPTIONS:\n",
+  'class' => 'Command',
+  'switches' => [{ 'name' => 'arg1', 'short' => '-a', 'long' => '--arg1 <arg1>', 'desc' => 'Sets arg1'}],
+  'subcommands' => [
+    { 
+      'name' =>  'subcommand1',
+      'banner' => "Subcommand1\nOPTIONS:\n",
+      'class' => 'SubCommand1',
+      'switches' => [{ 'name' => 'arg1', 'short' => '-a', 'long' => '--arg1 <arg1>', 'desc' => 'Sets subcommand1 arg1'} ],
+      'subcommands' => [
+        { 
+          'name' =>  'subcommand2',
+          'banner' => "Subcommand2\nOPTIONS:\n",
+          'class' => 'SubCommand2',
+          'switches' => [{ 'name' => 'arg1', 'short' => '-a', 'long' => '--arg1 <arg1>', 'desc' => 'Sets subcommand2 arg1'}]
+        }
+      ]
+    }
+  ]
+}
+```
+In action: 
+```bash
+$ ruby /tmp/my-cli.rb -a 1  subcommand1 -a 2  subcommand2 -a 3
+{"arg1"=>"3", "_globals"=>{"command"=>{"class"=>"Command", "arg1"=>"1"}, "command::subcommand1"=>{"class"=>"SubCommand1", "arg1"=>"2"}}}
+```
+
+
+
+
+The configuration can also be a yaml or json file: 
+
+```ruby
+Tlopo::Cli.new(config_file: './cli-config.yml')
+```
 ## Contributing
 
-Bug reports and pull requests are welcome on GitHub at https://github.com/[USERNAME]/tlopo-cli. This project is intended to be a safe, welcoming space for collaboration, and contributors are expected to adhere to the [Contributor Covenant](http://contributor-covenant.org) code of conduct.
+1. Fork it ( https://github.com/[my-github-username]/kubeclient/fork )
+2. Create your feature branch (`git checkout -b my-new-feature`)
+3. Test your changes with `rake test rubocop`, add new tests if needed.
+4. If you added a new functionality, add it to README
+5. Commit your changes (`git commit -am 'Add some feature'`)
+6. Push to the branch (`git push origin my-new-feature`)
+7. Create a new Pull Request
 
-## License
+## Tests
 
-The gem is available as open source under the terms of the [MIT License](http://opensource.org/licenses/MIT).
+This library is tested with Minitest.
+Please run all tests before submitting a Pull Request, and add new tests for new functionality.
 
-## Code of Conduct
-
-Everyone interacting in the Tlopo::Cli project’s codebases, issue trackers, chat rooms and mailing lists is expected to follow the [code of conduct](https://github.com/[USERNAME]/tlopo-cli/blob/master/CODE_OF_CONDUCT.md).
+Running tests:
+```ruby
+rake test
+```

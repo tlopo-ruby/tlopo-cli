@@ -12,7 +12,9 @@ module Tlopo
       @cfg = YAML.safe_load(File.read(opts[:config_file])) if opts[:config_file]
       @cfg = opts[:config] if opts[:config]
       @globals = @cfg[:globals]
+      @usage = @cfg[:usage]
       @cfg.delete(:globals)
+      @cfg.delete(:usage)
     end
 
     def run
@@ -32,7 +34,7 @@ module Tlopo
       return nil if obj.nil?
       result[key] = {} unless result[key]
       result[key]['class'] = obj['class']
-      OptionParser.new do |opts|
+      op = OptionParser.new do |opts|
         opts.banner = obj['banner']
         if obj['switches']
           obj['switches'].each do |sw|
@@ -43,6 +45,8 @@ module Tlopo
           end
         end
       end
+      result[key]['_usage'] = op.to_s if @usage
+      op
     end
 
     def parse_recursive(obj, result, stack = [])
